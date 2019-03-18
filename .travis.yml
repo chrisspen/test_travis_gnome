@@ -40,10 +40,10 @@ before_script:
   - sleep 3 # give gnome-shell some time to start
 
 script:
--   sudo journalctl /usr/bin/gnome-shell|grep -i error
+-   sudo journalctl /usr/bin/gnome-shell|grep -i gnome-shell; test $? -eq 1;
 -   sudo journalctl --rotate
 -   sudo journalctl --vacuum-time=1s # Clear initial gnome-shell errors we don't care about.
--   ps -C gnome-shell -o %cpu,%mem,cmd
+-   ps -C gnome-shell -o %cpu,%mem,cmd # Show pre-extension gnome-shell performance.
 -   set -e
 -   cd $TRAVIS_BUILD_DIR
 -   mkdir ~/git_projects
@@ -59,6 +59,11 @@ script:
 -   sudo chmod -R 777 ~/git_projects
 -   sudo make install
 -   gnome-shell-extension-tool --enable-extension=system-monitor@paradoxxx.zero.gmail.com
--   sleep 10 # give extension time to run
--   ps -C gnome-shell -o %cpu,%mem,cmd
--   sudo journalctl /usr/bin/gnome-shell|grep -i error
+-   sleep 10 # Give extension time to run.
+-   ps -C gnome-shell -o %cpu,%mem,cmd # Show post-extension gnome-shell performance.
+# Check CPU. On localhost with 2.80GHz × 4 takes ~3%, on Travis ~15%.
+-   [[ $(bc <<< "$(ps -C gnome-shell -o %cpu|tail -1) < 20") -eq 1 ]]
+# Check memory. On localhost with 32GB of memory, ~0.6%, on Travis ~3%.
+-   [[ $(bc <<< "$(ps -C gnome-shell -o %mem|tail -1) < 5") -eq 1 ]]
+# Confirm extension hasn't thrown any errors.
+-   sudo journalctl /usr/bin/gnome-shell|grep -i gnome-shell; test $? -eq 1;
