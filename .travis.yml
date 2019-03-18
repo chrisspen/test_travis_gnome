@@ -57,7 +57,7 @@ script:
 -   echo "$USER"
 -   sudo chown -R $USER:$USER ~/git_projects
 -   sudo chmod -R 777 ~/git_projects
--   make install
+-   sudo make install
 -   gnome-shell-extension-tool --enable-extension=system-monitor@paradoxxx.zero.gmail.com
 -   sleep 10 # give extension time to run
 -   ps -C gnome-shell -o %cpu,%mem,cmd
