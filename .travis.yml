@@ -50,7 +50,7 @@ script:
 -   cd ~/git_projects
 -   git clone git://github.com/paradoxxxzero/gnome-shell-system-monitor-applet.git    
 -   cd ~/git_projects/gnome-shell-system-monitor-applet
--   ./checkjs.sh
+#-   ./checkjs.sh
 #-   mkdir -p ~/.local/share/gnome-shell/extensions
 #-   cd ~/.local/share/gnome-shell/extensions
 #-   ln -s ~/git_projects/gnome-shell-system-monitor-applet/system-monitor@paradoxxx.zero.gmail.com
@@ -66,4 +66,5 @@ script:
 # Check memory. On localhost with 32GB of memory, ~0.6%, on Travis ~3%.
 -   bash -c '[[ $(bc <<< "$(ps -C gnome-shell -o %mem|tail -1) < 5") -eq 1 ]]'
 # Confirm extension hasn't thrown any errors.
+-   sudo journalctl /usr/bin/gnome-shell
 -   sudo journalctl /usr/bin/gnome-shell|grep -i gnome-shell; test $? -eq 1;
