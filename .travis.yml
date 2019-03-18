@@ -1,0 +1,53 @@
+# https://docs.travis-ci.com/user/multi-os/
+# https://docs.travis-ci.com/user/ci-environment/#Virtualization-environments
+
+dist: xenial
+sudo: required
+language: python
+python: 2.7
+
+install:
+-   sudo apt-key update
+-   sudo apt-get -yq update
+-   sudo apt -yq install xvfb gnome-shell
+
+# Install NodeJS from upstream, since the version that comes with Ubuntu 14 is ancient.
+# https://askubuntu.com/a/548776/13217
+-   sudo apt-get -yq install curl
+-   curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+-   sudo apt-get install -yq nodejs
+
+# Necessary on some versions of Ubuntu 14, which has a malformed npm/nodejs package.
+-   sudo bash -c "[ ! -f /usr/bin/node ] && ln -s /usr/bin/nodejs /usr/bin/node || true"
+-   which nodejs
+-   which node
+
+# Install NPM from upstream.
+-   git clone git://github.com/npm/cli.git
+-   cd cli/scripts
+-   chmod +x install.sh
+-   sudo ./install.sh
+-   cd ../..
+
+-   sudo npm install -g eslint
+
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+  - gnome-shell &
+  - sleep 3 # give gnome-shell some time to start
+
+script:
+-   set -e
+-   cd $TRAVIS_BUILD_DIR
+-   mkdir ~/git_projects
+-   cd ~/git_projects
+-   git clone git://github.com/paradoxxxzero/gnome-shell-system-monitor-applet.git    
+-   ./checkjs.sh
+#-   mkdir -p ~/.local/share/gnome-shell/extensions
+#-   cd ~/.local/share/gnome-shell/extensions
+#-   ln -s ~/git_projects/gnome-shell-system-monitor-applet/system-monitor@paradoxxx.zero.gmail.com
+-   make install
+-   gnome-shell-extension-tool --enable-extension=system-monitor@paradoxxx.zero.gmail.com
+-   sudo journalctl /usr/bin/gnome-shell|grep -i error
