@@ -42,7 +42,8 @@ before_script:
 script:
 -   sudo journalctl /usr/bin/gnome-shell|grep -i error
 -   sudo journalctl --rotate
--   sudo journalctl --vacuum-time=1s
+-   sudo journalctl --vacuum-time=1s # Clear initial gnome-shell errors we don't care about.
+-   ps -C gnome-shell -o %cpu,%mem,cmd
 -   set -e
 -   cd $TRAVIS_BUILD_DIR
 -   mkdir ~/git_projects
@@ -53,6 +54,11 @@ script:
 #-   mkdir -p ~/.local/share/gnome-shell/extensions
 #-   cd ~/.local/share/gnome-shell/extensions
 #-   ln -s ~/git_projects/gnome-shell-system-monitor-applet/system-monitor@paradoxxx.zero.gmail.com
+-   echo "$USER"
+-   sudo chown -R $USER:$USER ~/git_projects
+-   sudo chmod -R 777 ~/git_projects
 -   make install
 -   gnome-shell-extension-tool --enable-extension=system-monitor@paradoxxx.zero.gmail.com
+-   sleep 10 # give extension time to run
+-   ps -C gnome-shell -o %cpu,%mem,cmd
 -   sudo journalctl /usr/bin/gnome-shell|grep -i error
