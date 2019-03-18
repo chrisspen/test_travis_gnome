@@ -6,6 +6,10 @@ sudo: required
 #language: python
 #python: 2.7
 
+env:
+-   MAX_CPU_PERCENT=20
+-   MAX_MEM_PERCENT=5
+
 install:
 -   sudo apt-key update
 -   sudo apt-get -yq update
@@ -50,7 +54,7 @@ script:
 -   cd ~/git_projects
 -   git clone git://github.com/paradoxxxzero/gnome-shell-system-monitor-applet.git    
 -   cd ~/git_projects/gnome-shell-system-monitor-applet
-#-   ./checkjs.sh
+-   ./checkjs.sh
 #-   mkdir -p ~/.local/share/gnome-shell/extensions
 #-   cd ~/.local/share/gnome-shell/extensions
 #-   ln -s ~/git_projects/gnome-shell-system-monitor-applet/system-monitor@paradoxxx.zero.gmail.com
@@ -61,10 +65,10 @@ script:
 -   gnome-shell-extension-tool --enable-extension=system-monitor@paradoxxx.zero.gmail.com
 -   sleep 10 # Give extension time to run.
 -   ps -C gnome-shell -o %cpu,%mem,cmd # Show post-extension gnome-shell performance.
-# Check CPU. On localhost with 2.80GHz × 4 takes ~3%, on Travis ~15%.
--   bash -c '[[ $(bc <<< "$(ps -C gnome-shell -o %cpu|tail -1) < 20") -eq 1 ]]'
+# Check CPU. On localhost with 2.80GHz x 4 takes ~3%, on Travis ~15%.
+-   bash -c '[[ $(bc <<< "$(ps -C gnome-shell -o %cpu|tail -1) < $MAX_CPU_PERCENT") -eq 1 ]]'
 # Check memory. On localhost with 32GB of memory, ~0.6%, on Travis ~3%.
--   bash -c '[[ $(bc <<< "$(ps -C gnome-shell -o %mem|tail -1) < 5") -eq 1 ]]'
+-   bash -c '[[ $(bc <<< "$(ps -C gnome-shell -o %mem|tail -1) < $MAX_MEM_PERCENT") -eq 1 ]]'
 # Confirm extension hasn't thrown any errors.
 -   sudo journalctl /usr/bin/gnome-shell
 -   sudo journalctl /usr/bin/gnome-shell|grep "\-\- No entries \-\-"
