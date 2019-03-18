@@ -7,8 +7,7 @@ sudo: required
 #python: 2.7
 
 env:
--   MAX_CPU_PERCENT=20
--   MAX_MEM_PERCENT=5
+-   MAX_CPU_PERCENT=20 MAX_MEM_PERCENT=5
 
 install:
 -   sudo apt-key update
