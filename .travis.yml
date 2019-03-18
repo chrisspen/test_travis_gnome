@@ -40,7 +40,7 @@ before_script:
   - sleep 3 # give gnome-shell some time to start
 
 script:
--   sudo journalctl /usr/bin/gnome-shell|grep -i gnome-shell; test $? -eq 1;
+-   sudo journalctl /usr/bin/gnome-shell
 -   sudo journalctl --rotate
 -   sudo journalctl --vacuum-time=1s # Clear initial gnome-shell errors we don't care about.
 -   ps -C gnome-shell -o %cpu,%mem,cmd # Show pre-extension gnome-shell performance.
