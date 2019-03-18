@@ -45,6 +45,7 @@ script:
 -   mkdir ~/git_projects
 -   cd ~/git_projects
 -   git clone git://github.com/paradoxxxzero/gnome-shell-system-monitor-applet.git    
+-   cd ~/git_projects/gnome-shell-system-monitor-applet
 -   ./checkjs.sh
 #-   mkdir -p ~/.local/share/gnome-shell/extensions
 #-   cd ~/.local/share/gnome-shell/extensions
