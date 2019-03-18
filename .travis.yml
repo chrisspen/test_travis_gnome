@@ -62,8 +62,8 @@ script:
 -   sleep 10 # Give extension time to run.
 -   ps -C gnome-shell -o %cpu,%mem,cmd # Show post-extension gnome-shell performance.
 # Check CPU. On localhost with 2.80GHz × 4 takes ~3%, on Travis ~15%.
--   [[ $(bc <<< "$(ps -C gnome-shell -o %cpu|tail -1) < 20") -eq 1 ]]
+-   bash -c '[[ $(bc <<< "$(ps -C gnome-shell -o %cpu|tail -1) < 20") -eq 1 ]]'
 # Check memory. On localhost with 32GB of memory, ~0.6%, on Travis ~3%.
--   [[ $(bc <<< "$(ps -C gnome-shell -o %mem|tail -1) < 5") -eq 1 ]]
+-   bash -c '[[ $(bc <<< "$(ps -C gnome-shell -o %mem|tail -1) < 5") -eq 1 ]]'
 # Confirm extension hasn't thrown any errors.
 -   sudo journalctl /usr/bin/gnome-shell|grep -i gnome-shell; test $? -eq 1;
